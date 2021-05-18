@@ -3,11 +3,15 @@ package com.hotmart.bankapi.service
 import com.hotmart.bankapi.model.Account
 import com.hotmart.bankapi.repository.AccountRepository
 import org.springframework.stereotype.Service
+import org.springframework.util.Assert
 import java.util.*
 
 @Service
 class AccountServiceImpl(private val repository: AccountRepository) : AccountService {
     override fun create(account: Account): Account {
+        Assert.hasLength(account.name, "[name] nao pode estar em branco")
+        Assert.isTrue(account.name.length >= 5, "[name] minimo 5 caracteres")
+        Assert.isTrue(account.document.length == 11, "[document] precisa ter 11 caracteres")
         return repository.save(account)
     }
 

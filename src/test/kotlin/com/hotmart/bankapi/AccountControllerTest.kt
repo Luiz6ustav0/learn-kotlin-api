@@ -52,7 +52,7 @@ internal class AccountControllerTest {
 
     @Test
     fun `test create account`() {
-        val account = Account(name = "Test", document = "123", phone = "987654321")
+        val account = Account(name = "Test Name", document = "12345678900", phone = "987654321")
         val jsonAccount = ObjectMapper().writeValueAsString(account)
         accountRepository.deleteAll()
         mockMvc.perform(
@@ -105,6 +105,60 @@ internal class AccountControllerTest {
 
         val findById = accountRepository.findById(account.id!!)
         Assertions.assertFalse(findById.isPresent)
+    }
+
+    @Test
+    fun `test create account validation error empty name`() {
+        val account = Account(name = "", document = "123", phone = "987654321")
+        val jsonAccount = ObjectMapper().writeValueAsString(account)
+        accountRepository.deleteAll()
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/accounts")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonAccount)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").value(400))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").value("[name] nao pode estar em branco"))
+    }
+
+    @Test
+    fun `test create account validation error name should have min 3 characters`() {
+        val account = Account(name = "luiz", document = "123", phone = "987654321")
+        val jsonAccount = ObjectMapper().writeValueAsString(account)
+        accountRepository.deleteAll()
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/accounts")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonAccount)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").value(400))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").value("[name] minimo 5 caracteres"))
+    }
+
+    @Test
+    fun `test create account validation error document should have 11 characters`() {
+        val account = Account(name = "luiz6u", document = "123", phone = "123456")
+        val jsonAccount = ObjectMapper().writeValueAsString(account)
+        accountRepository.deleteAll()
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/accounts")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonAccount)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.statusCode").value(400))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").value("[document] precisa ter 11 caracteres"))
     }
 
 }
