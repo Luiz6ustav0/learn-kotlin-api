@@ -1,4 +1,4 @@
-package com.hotmart.bankapi
+package com.hotmart.bankapi.model
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

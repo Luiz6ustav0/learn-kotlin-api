@@ -1,5 +1,7 @@
-package com.hotmart.bankapi
+package com.hotmart.bankapi.controller
 
+import com.hotmart.bankapi.model.Account
+import com.hotmart.bankapi.repository.AccountRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

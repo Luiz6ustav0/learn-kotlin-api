@@ -1,6 +1,8 @@
 package com.hotmart.bankapi
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.hotmart.bankapi.model.Account
+import com.hotmart.bankapi.repository.AccountRepository
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
